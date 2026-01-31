@@ -1,0 +1,16 @@
+{
+    "name": "noteme",
+    "version": "1.0.0",
+    "description": "Ultra-light static social notes",
+    "main": "build.js",
+    "scripts": {
+        "build": "node build.js",
+        "dev": "node build.js && npx serve dist -l 3000"
+    },
+    "keywords": [
+        "notes",
+        "static",
+        "social"
+    ],
+    "license": "MIT"
+}

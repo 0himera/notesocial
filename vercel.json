@@ -1,0 +1,21 @@
+{
+    "version": 2,
+    "buildCommand": "node build.js",
+    "outputDirectory": "dist",
+    "functions": {
+        "api/*.js": {
+            "memory": 128,
+            "maxDuration": 10
+        }
+    },
+    "routes": [
+        {
+            "src": "/api/(.*)",
+            "dest": "/api/$1"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/dist/$1"
+        }
+    ]
+}
