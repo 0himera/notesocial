@@ -39,57 +39,59 @@ async function getData() {
 // 3-Column Layout CSS
 const CSS = `
 <style>
-:root{--bg-sidebar:#202022;--bg-mid:#1c1c1e;--bg-editor:#1e1e1e;--border:#38383a;--accent:#e0b949;--text:#fff;--text-sec:#8e8e93;--sel:#c59f34}
+:root{--bg-sidebar:#262626;--bg-mid:#1f1f1f;--bg-editor:#1e1e1e;--border:#333;--accent:#dca428;--accent-text:#fff;--text:#e5e5e5;--text-sec:#888;--sel:#3a3a3a}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg-editor);color:var(--text);height:100vh;display:flex;overflow:hidden}
 a{text-decoration:none;color:inherit}
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#444;border-radius:4px}
 
 /* Column 1: Users (Sidebar) */
-.col-left{width:240px;background:var(--bg-sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column}
-.app-header{padding:12px 16px;border-bottom:1px solid var(--border);font-weight:600;font-size:15px;color:var(--accent);display:flex;justify-content:space-between;align-items:center}
+.col-left{width:200px;min-width:200px;background:var(--bg-sidebar);border-right:1px solid #000;display:flex;flex-direction:column}
+.app-header{height:50px;padding:0 16px;display:flex;align-items:center;font-weight:600;font-size:15px;color:var(--text-sec)}
 .user-list{flex:1;overflow-y:auto;padding:8px}
-.user-item{padding:8px 12px;border-radius:6px;font-size:14px;color:var(--text-sec);display:flex;align-items:center;gap:8px;margin-bottom:2px;cursor:pointer}
-.user-item:hover{background:rgba(255,255,255,0.05);color:var(--text)}
-.user-item.active{background:var(--sel);color:#000;font-weight:500}
-.icon-folder{width:16px;height:16px;opacity:0.75}
+.user-item{padding:8px 12px;border-radius:6px;font-size:14px;color:var(--text);display:flex;align-items:center;gap:10px;margin-bottom:2px;cursor:pointer;transition:0.1s}
+.user-item:hover{background:rgba(255,255,255,0.05)}
+.user-item.active{background:var(--accent);color:#000;font-weight:500}
+.icon-folder{width:16px;height:16px;opacity:0.8}
 
 /* Column 2: Notes List */
-.col-mid{width:300px;background:var(--bg-mid);border-right:1px solid var(--border);display:flex;flex-direction:column}
-.search-bar{padding:10px;border-bottom:1px solid var(--border)}
+.col-mid{width:280px;min-width:280px;background:var(--bg-mid);border-right:1px solid #000;display:flex;flex-direction:column}
+.search-bar{height:50px;padding:10px;display:flex;align-items:center,justify-content:center}
+.search-placeholder{width:100%;text-align:center;font-size:13px;color:var(--text-sec);background:rgba(255,255,255,0.05);padding:4px;border-radius:6px}
 .note-list-container{flex:1;overflow-y:auto}
-.note-preview{padding:12px 20px;border-bottom:1px solid #2a2a2c;cursor:pointer}
+.note-preview{padding:16px 20px;border-bottom:1px solid #2a2a2c;cursor:pointer}
 .note-preview:hover{background:rgba(255,255,255,0.03)}
-.note-preview.active{background:var(--sel);border-color:var(--sel)}
-.note-preview.active *{color:#000!important}
-.note-title{font-weight:600;font-size:15px;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.note-meta{font-size:13px;color:var(--text-sec);display:flex;gap:8px}
-.note-snippet{font-size:13px;color:var(--text-sec);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:0.8}
+.note-preview.active{background:var(--sel);position:relative}
+.note-preview.active::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent)}
+.note-title{font-weight:600;font-size:15px;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
+.note-meta{font-size:13px;color:var(--text-sec);display:flex;gap:8px;align-items:baseline}
+.note-date{flex-shrink:0}
+.note-snippet{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:0.8}
 .empty-msg{padding:20px;color:var(--text-sec);text-align:center;font-size:13px;margin-top:40px}
 
 /* Column 3: Editor (Content) */
-.col-right{flex:1;background:var(--bg-editor);display:flex;flex-direction:column;overflow:hidden}
-.editor-toolbar{height:52px;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;justify-content:space-between}
-.note-date-display{color:var(--text-sec);font-size:12px;margin:0 auto}
-.editor-content{flex:1;overflow-y:auto;padding:40px 60px;max-width:900px;margin:0 auto;width:100%}
+.col-right{flex:1;background:var(--bg-editor);display:flex;flex-direction:column;overflow:hidden;position:relative}
+.editor-toolbar{height:50px;display:flex;align-items:center;padding:0 30px;justify-content:space-between;color:var(--text-sec);font-size:13px}
+.editor-content{flex:1;overflow-y:auto;padding:20px 60px 80px;max-width:900px;margin:0 auto;width:100%}
 
-/* Typography for Content */
-.content{font-size:16px;line-height:1.6}
-.content h1{font-size:28px;margin:0 0 20px}
-.content p{margin-bottom:16px}
-.content a{color:var(--accent)}
-.content img{max-width:100%;border-radius:8px;margin:12px 0}
-.content ul,.content ol{margin:0 0 16px 24px;color:var(--text-sec)}
-.content blockquote{border-left:3px solid var(--accent);padding-left:16px;color:var(--text-sec);margin:16px 0}
-.content pre{background:#2a2a2c;padding:12px;border-radius:6px;overflow-x:auto;margin:16px 0;font-family:monospace;font-size:14px}
-
-/* Buttons */
-.add-btn{font-size:18px;cursor:pointer;width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(255,255,255,0.1)}
-.add-btn:hover{background:var(--accent);color:#000}
+/* Content Typography */
+.content{font-size:17px;line-height:1.6}
+/* Allow raw HTML but add spacing for paragraphs if they exist */
+.content p{margin-bottom:1em}
+.content h1{font-size:2.2em;font-weight:700;margin:0.5em 0}
+.content h2{font-size:1.5em;font-weight:600;margin:0.5em 0}
+.content ul,.content ol{margin:0 0 1em 1.5em}
+.content a{color:var(--accent);text-decoration:underline}
+.content blockquote{border-left:4px solid var(--accent);padding-left:1em;color:var(--text-sec);margin:1em 0}
+.add-btn{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--accent);margin-left:auto;cursor:pointer}
+.add-btn:hover{background:rgba(218,164,40,0.15)}
 </style>`;
 
 function formatDate(isoDate) {
   const d = new Date(isoDate);
-  return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
+  return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'numeric' });
 }
 
 // Generate complete HTML page
@@ -106,7 +108,7 @@ function renderLayout(data, activeUserId, activeNoteId) {
   `).join('');
 
   // 2. Middle Column (Notes)
-  let notesListHtml = '<div class="empty-msg">Выберите пользователя</div>';
+  let notesListHtml = '<div class="empty-msg">Выберите юзера</div>';
   if (activeUser) {
     if (activeUser.notes.length === 0) {
       notesListHtml = '<div class="empty-msg">Нет заметок</div>';
@@ -114,15 +116,17 @@ function renderLayout(data, activeUserId, activeNoteId) {
       const sortedNotes = [...activeUser.notes].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       notesListHtml = sortedNotes.map(n => {
         const isActive = activeNoteId && n.id == activeNoteId;
-        const title = n.text.split('\n')[0].replace(/<[^>]*>/g, '').substring(0, 30) || 'Без названия';
-        const snippet = n.text.split('\n').slice(1).join(' ').replace(/<[^>]*>/g, '').substring(0, 50) || '...';
+        // Strip tags for preview
+        const plainText = n.text.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+        const title = plainText.substring(0, 30) || 'Без названия';
+        const snippet = plainText.substring(30, 80) || 'Нет текста';
 
         return `
         <a href="/${activeUser.id}/${n.id}.html" class="note-preview ${isActive ? 'active' : ''}">
           <div class="note-title">${title}</div>
           <div class="note-meta">
-            <span>${new Date(n.createdAt).toLocaleDateString('ru-RU')}</span>
-            <span class="note-snippet">${snippet}</span>
+            <span class="note-date">${formatDate(n.createdAt)}</span>
+            <span class="note-snippet">${snippet}...</span>
           </div>
         </a>`;
       }).join('');
@@ -130,15 +134,17 @@ function renderLayout(data, activeUserId, activeNoteId) {
   }
 
   // 3. Right Column (Content)
-  let contentHtml = '<div class="empty-msg" style="margin-top:20vh;font-size:16px">← Выберите заметку</div>';
+  // IMPORTANT: We output activeNote.text RAW to support HTML/Scripts user input
+  // We DO NOT replace newline with br to avoid breaking script tags
+  let contentHtml = '<div class="empty-msg" style="margin-top:20vh;font-size:16px;opacity:0.5">Выберите заметку</div>';
   if (activeNote) {
     contentHtml = `
       <div class="editor-toolbar">
-         <div class="note-date-display">${formatDate(activeNote.createdAt)}</div>
-         <a href="/admin.html?user=${activeUserId}&note=${activeNote.id}" title="Редактировать (в админке)" style="opacity:0.5;font-size:12px">Edit</a>
+         <div class="note-date-display">${new Date(activeNote.createdAt).toLocaleString('ru-RU')}</div>
+         <a href="/admin.html?user=${activeUserId}&note=${activeNote.id}" title="Редактировать" class="add-btn">✎</a>
       </div>
       <div class="editor-content content">
-        ${activeNote.text.replace(/\n/g, '<br>')}
+        ${activeNote.text}
       </div>
     `;
   }
@@ -166,7 +172,7 @@ function renderLayout(data, activeUserId, activeNoteId) {
     <!-- 2. Notes List -->
     <div class="col-mid">
         <div class="search-bar">
-           <div style="background:rgba(255,255,255,0.1);border-radius:6px;padding:6px 10px;font-size:13px;color:var(--text-sec);text-align:center">
+           <div class="search-placeholder">
              ${activeUser ? activeUser.notes.length + ' заметок' : 'Все iCloud'}
            </div>
         </div>
