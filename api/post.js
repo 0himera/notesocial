@@ -38,7 +38,6 @@ async function writeData(data) {
 
     const url = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
     console.log('Writing to JSONBin:', url);
-    console.log('Data to write:', JSON.stringify(data));
 
     const res = await fetch(url, {
         method: 'PUT',
@@ -87,8 +86,7 @@ module.exports = async (req, res) => {
     }
 
     try {
-        const { action, userId, passwordHash, text } = req.body;
-        console.log('Request:', { action, userId, hasPassword: !!passwordHash, hasText: !!text });
+        const { action, userId, passwordHash, title, text } = req.body;
 
         const data = await readData();
 
@@ -139,6 +137,7 @@ module.exports = async (req, res) => {
 
             user.notes.push({
                 id: noteId,
+                title: title || 'Без названия', // Use specific title
                 text: text.trim(),
                 createdAt: new Date().toISOString()
             });

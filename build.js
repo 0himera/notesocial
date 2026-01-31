@@ -1,6 +1,6 @@
 /**
  * NoteMe Static Site Generator
- * Premium 3-column layout with Mobile Responsiveness
+ * Premium Responsive Layout | Explicit Title Support
  */
 
 const fs = require('fs');
@@ -35,7 +35,7 @@ async function getData() {
   return { users: [] };
 }
 
-// ========== PREMIUM & RESPONSIVE CSS ==========
+// ========== CSS ==========
 const CSS = `
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -49,7 +49,7 @@ const CSS = `
   --text-muted: #808080;
   --accent: #d4a422;
   --item-hover: rgba(255, 255, 255, 0.04);
-  --item-active: rgba(255, 255, 255, 0.08); /* Светлее, но без цвета */
+  --item-active: rgba(255, 255, 255, 0.08);
 }
 
 body {
@@ -64,26 +64,23 @@ body {
 
 a { text-decoration: none; color: inherit; }
 
-/* SCROLLBAR */
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; border: 2px solid var(--bg-list); }
 
-/* LAYOUT COLUMNS */
+/* COLUMNS */
 .col-users, .col-notes, .col-content {
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
-/* COLUMN 1: SIDEBAR */
 .col-users {
   width: 220px;
   min-width: 220px;
   background: var(--bg-sidebar);
   border-right: 1px solid #000;
 }
-
 .col-users .header {
   height: 52px;
   padding: 0 16px;
@@ -95,17 +92,8 @@ a { text-decoration: none; color: inherit; }
   font-size: 13px;
   letter-spacing: 0.5px;
 }
-
-.add-btn {
-  color: var(--accent);
-  font-size: 20px;
-  font-weight: 300;
-  opacity: 0.8;
-  transition: opacity 0.2s;
-  padding: 4px 8px; /* Touch area */
-}
+.add-btn { color: var(--accent); font-size: 20px; font-weight: 300; opacity: 0.8; padding: 4px; }
 .add-btn:hover { opacity: 1; }
-
 .col-users .list { flex: 1; overflow-y: auto; padding: 8px; }
 
 .user-item {
@@ -124,14 +112,14 @@ a { text-decoration: none; color: inherit; }
 .icon { font-size: 16px; opacity: 0.7; }
 .active .icon { opacity: 1; color: var(--accent); }
 
-/* COLUMN 2: NOTES LIST */
 .col-notes {
   width: 320px;
   min-width: 320px;
   background: var(--bg-list);
   border-right: 1px solid #000;
+  display: flex;
+  flex-direction: column;
 }
-
 .col-notes .header {
   height: 52px;
   display: flex;
@@ -141,18 +129,19 @@ a { text-decoration: none; color: inherit; }
   color: var(--text-muted);
   font-size: 13px;
   font-weight: 500;
-  position: relative; 
+  position: relative;
 }
-
 .col-notes .list { flex: 1; overflow-y: auto; }
 
 .note-item {
   display: flex;
   flex-direction: column;
-  padding: 18px 24px;
+  padding: 14px 20px;
   border-bottom: 1px solid rgba(255,255,255,0.05);
   cursor: pointer;
   transition: background 0.1s;
+  height: 70px;
+  justify-content: center;
 }
 .note-item:hover { background: var(--item-hover); }
 .note-item.active { background: var(--item-active); }
@@ -161,27 +150,23 @@ a { text-decoration: none; color: inherit; }
   font-size: 15px;
   font-weight: 600;
   color: #fff;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   line-height: 1.2;
 }
 .note-item .meta {
-  display: flex;
-  gap: 8px;
-  font-size: 13px;
+  font-size: 12px;
   color: var(--text-muted);
-  overflow: hidden;
   white-space: nowrap;
 }
-.note-item .date { flex-shrink: 0; }
-.note-item .snippet { opacity: 0.7; overflow: hidden; text-overflow: ellipsis; }
 
-/* COLUMN 3: CONTENT */
 .col-content {
   flex: 1;
   background: var(--bg-content);
   position: relative;
 }
-
 .col-content .toolbar {
   height: 52px;
   display: flex;
@@ -189,10 +174,9 @@ a { text-decoration: none; color: inherit; }
   justify-content: center;
   color: var(--text-muted);
   font-size: 12px;
-  border-bottom: 1px solid transparent; /* Align visually */
+  border-bottom: 1px solid transparent; 
   position: relative;
 }
-
 .col-content .body {
   flex: 1;
   overflow-y: auto;
@@ -202,7 +186,6 @@ a { text-decoration: none; color: inherit; }
   width: 100%;
 }
 
-/* Content Typography */
 .body { font-size: 17px; line-height: 1.6; color: #ddd; }
 .body h1 { font-size: 28px; margin: 24px 0 16px; color: #fff; }
 .body h2 { font-size: 22px; margin: 20px 0 12px; color: #fff; }
@@ -215,28 +198,16 @@ a { text-decoration: none; color: inherit; }
 .body a { color: var(--accent); border-bottom: 1px solid rgba(212, 164, 34, 0.3); }
 
 .empty { margin-top: 30vh; text-align: center; color: var(--text-muted); font-size: 14px; }
-
-/* MOBILE BACK BUTTONS & TITLE */
 .mobile-nav { display: none; position: absolute; left: 10px; top: 0; bottom: 0; align-items: center; color: var(--accent); font-size: 16px; padding: 0 10px; cursor: pointer; }
 
-/* ===== MEDIA QUERIES (MOBILE) ===== */
+/* MOBILE */
 @media (max-width: 768px) {
-  .col-users, .col-notes, .col-content {
-    width: 100%;
-    min-width: 0;
-    display: none; /* Hide all by default */
-  }
-
-  /* Show active column based on body state */
+  .col-users, .col-notes, .col-content { width: 100%; min-width: 0; display: none; }
   body.view-root .col-users { display: flex; }
   body.view-user .col-notes { display: flex; }
   body.view-note .col-content { display: flex; }
-
-  /* Adjust padding for mobile */
-  .note-item { padding: 16px; }
+  .note-item { padding: 16px; height: auto; }
   .col-content .body { padding: 20px 24px 80px; }
-  
-  /* Show Back Buttons */
   .mobile-nav { display: flex; }
 }
 </style>
@@ -250,20 +221,13 @@ function stripHtml(str) {
   return str.replace(/<[^>]*>/g, ' ').replace(/\\s+/g, ' ').trim();
 }
 
-// Pluralization Helper
 function getNoun(number, one, two, five) {
   let n = Math.abs(number);
   n %= 100;
-  if (n >= 5 && n <= 20) {
-    return five;
-  }
+  if (n >= 5 && n <= 20) return five;
   n %= 10;
-  if (n === 1) {
-    return one;
-  }
-  if (n >= 2 && n <= 4) {
-    return two;
-  }
+  if (n === 1) return one;
+  if (n >= 2 && n <= 4) return two;
   return five;
 }
 
@@ -271,12 +235,11 @@ function renderPage(data, activeUserId, activeNoteId) {
   const activeUser = activeUserId ? data.users.find(u => u.id === activeUserId) : null;
   const activeNote = activeUser && activeNoteId ? activeUser.notes.find(n => n.id == activeNoteId) : null;
 
-  // DETERMINE VIEW STATE for Mobile
   let viewState = 'view-root';
   if (activeUser) viewState = 'view-user';
   if (activeNote) viewState = 'view-note';
 
-  // Column 1: Users
+  // USERS
   const usersHtml = data.users.map(u => `
     <a href="/${u.id}/index.html" class="user-item ${u.id === activeUserId ? 'active' : ''}">
       <span class="icon">📁</span>
@@ -284,7 +247,7 @@ function renderPage(data, activeUserId, activeNoteId) {
     </a>
   `).join('');
 
-  // Column 2: Notes
+  // NOTES (Use Direct Title from Data)
   let notesHtml = '<div class="empty">Нет пользователей</div>';
   let notesCountStr = '0 заметок';
 
@@ -297,15 +260,14 @@ function renderPage(data, activeUserId, activeNoteId) {
     } else {
       const sorted = [...activeUser.notes].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       notesHtml = sorted.map(n => {
-        const plain = stripHtml(n.text);
-        const title = plain.substring(0, 30) || 'Без названия';
-        const snippet = plain.substring(30, 80) || 'Нет текста';
+        // USE title directly from JSON, fallback to 'Untitled'
+        const title = n.title || 'Без названия';
+
         return `
           <a href="/${activeUser.id}/${n.id}.html" class="note-item ${n.id == activeNoteId ? 'active' : ''}">
             <div class="title">${title}</div>
             <div class="meta">
-              <span class="date">${new Date(n.createdAt).toLocaleDateString('ru-RU', { day: 'numeric', month: 'numeric' })}</span>
-              <span class="snippet">${snippet}</span>
+              <span class="date">${formatDate(n.createdAt)}</span>
             </div>
           </a>
         `;
@@ -313,26 +275,37 @@ function renderPage(data, activeUserId, activeNoteId) {
     }
   }
 
-  // Column 3: Content
+  // CONTENT
   let contentHtml = '<div class="empty">Выберите заметку для просмотра</div>';
   let noteDate = '';
 
   if (activeNote) {
     noteDate = new Date(activeNote.createdAt).toLocaleString('ru-RU');
-    contentHtml = `<div class="body">${activeNote.text}</div>`;
+    const title = activeNote.title || 'Без названия';
+
+    // Add Title H1 to content if you want, or just keep it in the list.
+    // Let's add it as H1 for clarity in the content view.
+    contentHtml = `
+      <div class="body">
+        <h1>${title}</h1>
+        ${activeNote.text}
+      </div>`;
   }
+
+  const pageTitle = activeNote
+    ? (activeNote.title || 'Note')
+    : 'note*me';
 
   return `<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>note*me ${activeNote ? '— ' + stripHtml(activeNote.text).substring(0, 20) : ''}</title>
+  <title>${pageTitle}</title>
   ${CSS}
 </head>
 <body class="${viewState}">
   
-  <!-- USERS COLUMN -->
   <div class="col-users">
     <div class="header">
       <span>note*me</span>
@@ -341,7 +314,6 @@ function renderPage(data, activeUserId, activeNoteId) {
     <div class="list">${usersHtml}</div>
   </div>
 
-  <!-- NOTES LIST COLUMN -->
   <div class="col-notes">
     <div class="header">
       <a href="/" class="mobile-nav">❮</a>
@@ -350,7 +322,6 @@ function renderPage(data, activeUserId, activeNoteId) {
     <div class="list">${notesHtml}</div>
   </div>
 
-  <!-- CONTENT COLUMN -->
   <div class="col-content">
     <div class="toolbar">
       ${activeUser ? `<a href="/${activeUser.id}/index.html" class="mobile-nav">❮</a>` : ''}
@@ -367,15 +338,11 @@ async function build() {
   console.log('🔨 Building note*me...');
   const data = await getData();
 
-  if (!fs.existsSync(DIST_DIR)) {
-    fs.mkdirSync(DIST_DIR, { recursive: true });
-  }
+  if (!fs.existsSync(DIST_DIR)) fs.mkdirSync(DIST_DIR, { recursive: true });
 
-  // Root index
   fs.writeFileSync(path.join(DIST_DIR, 'index.html'), renderPage(data, null, null));
   console.log('✓ index.html');
 
-  // User pages
   for (const user of data.users) {
     const userDir = path.join(DIST_DIR, user.id);
     if (!fs.existsSync(userDir)) fs.mkdirSync(userDir, { recursive: true });
@@ -389,7 +356,6 @@ async function build() {
     console.log(`  ✓ ${user.notes.length} notes for ${user.id}`);
   }
 
-  // Copy public files
   if (fs.existsSync(PUBLIC_DIR)) {
     fs.readdirSync(PUBLIC_DIR).forEach(file => {
       fs.copyFileSync(path.join(PUBLIC_DIR, file), path.join(DIST_DIR, file));
