@@ -39,7 +39,7 @@ async function getData() {
 // 3-Column Layout CSS
 const CSS = `
 <style>
-:root{--bg-sidebar:#262626;--bg-mid:#1f1f1f;--bg-editor:#1e1e1e;--border:#333;--accent:#dca428;--accent-text:#fff;--text:#e5e5e5;--text-sec:#888;--sel:#3a3a3a}
+:root{--bg-sidebar:#262626;--bg-mid:#1f1f1f;--bg-editor:#1e1e1e;--border:#000;--accent:#dca428;--text:#e5e5e5;--text-sec:#888;--sel:rgba(255,255,255,0.08);--hover:rgba(255,255,255,0.04)}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg-editor);color:var(--text);height:100vh;display:flex;overflow:hidden}
 a{text-decoration:none;color:inherit}
@@ -48,23 +48,23 @@ a{text-decoration:none;color:inherit}
 ::-webkit-scrollbar-thumb{background:#444;border-radius:4px}
 
 /* Column 1: Users (Sidebar) */
-.col-left{width:200px;min-width:200px;background:var(--bg-sidebar);border-right:1px solid #000;display:flex;flex-direction:column}
+.col-left{width:200px;min-width:200px;background:var(--bg-sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column}
 .app-header{height:50px;padding:0 16px;display:flex;align-items:center;font-weight:600;font-size:15px;color:var(--text-sec)}
 .user-list{flex:1;overflow-y:auto;padding:8px}
 .user-item{padding:8px 12px;border-radius:6px;font-size:14px;color:var(--text);display:flex;align-items:center;gap:10px;margin-bottom:2px;cursor:pointer;transition:0.1s}
-.user-item:hover{background:rgba(255,255,255,0.05)}
-.user-item.active{background:var(--accent);color:#000;font-weight:500}
-.icon-folder{width:16px;height:16px;opacity:0.8}
+.user-item:hover{background:var(--hover)}
+.user-item.active{background:var(--sel);color:#fff;font-weight:500}
+.icon-folder{width:16px;height:16px;opacity:0.6}
+.active .icon-folder{opacity:1;color:var(--accent)}
 
 /* Column 2: Notes List */
-.col-mid{width:280px;min-width:280px;background:var(--bg-mid);border-right:1px solid #000;display:flex;flex-direction:column}
-.search-bar{height:50px;padding:10px;display:flex;align-items:center,justify-content:center}
+.col-mid{width:280px;min-width:280px;background:var(--bg-mid);border-right:1px solid var(--border);display:flex;flex-direction:column}
+.search-bar{height:50px;padding:10px;display:flex;align-items:center;justify-content:center}
 .search-placeholder{width:100%;text-align:center;font-size:13px;color:var(--text-sec);background:rgba(255,255,255,0.05);padding:4px;border-radius:6px}
 .note-list-container{flex:1;overflow-y:auto}
-.note-preview{padding:16px 20px;border-bottom:1px solid #2a2a2c;cursor:pointer}
-.note-preview:hover{background:rgba(255,255,255,0.03)}
-.note-preview.active{background:var(--sel);position:relative}
-.note-preview.active::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent)}
+.note-preview{padding:16px 20px;border-bottom:1px solid #2a2a2c;cursor:pointer;transition:0.1s}
+.note-preview:hover{background:var(--hover)}
+.note-preview.active{background:var(--sel)}
 .note-title{font-weight:600;font-size:15px;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
 .note-meta{font-size:13px;color:var(--text-sec);display:flex;gap:8px;align-items:baseline}
 .note-date{flex-shrink:0}
@@ -78,7 +78,6 @@ a{text-decoration:none;color:inherit}
 
 /* Content Typography */
 .content{font-size:17px;line-height:1.6}
-/* Allow raw HTML but add spacing for paragraphs if they exist */
 .content p{margin-bottom:1em}
 .content h1{font-size:2.2em;font-weight:700;margin:0.5em 0}
 .content h2{font-size:1.5em;font-weight:600;margin:0.5em 0}
