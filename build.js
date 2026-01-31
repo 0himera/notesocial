@@ -66,7 +66,15 @@ h1{font-size:28px;font-weight:600}
 .user-preview{color:#98989f;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .user-date{color:#636366;font-size:12px;margin-top:8px}
 .note{background:#2c2c2e;border-radius:12px;padding:16px;margin-bottom:12px}
-.note-text{font-size:16px;line-height:1.5;white-space:pre-wrap}
+.note-text{font-size:16px;line-height:1.6}
+.note-text p{margin:0 0 12px}
+.note-text a{color:#ff9f0a}
+.note-text img{max-width:100%;border-radius:8px;margin:8px 0}
+.note-text h1,.note-text h2,.note-text h3{margin:16px 0 8px}
+.note-text ul,.note-text ol{margin:8px 0;padding-left:24px}
+.note-text code{background:#38383a;padding:2px 6px;border-radius:4px;font-size:14px}
+.note-text pre{background:#38383a;padding:12px;border-radius:8px;overflow-x:auto;margin:8px 0}
+.note-text blockquote{border-left:3px solid #ff9f0a;padding-left:12px;margin:8px 0;color:#98989f}
 .note-date{color:#636366;font-size:12px;margin-top:12px}
 .back{color:#ff9f0a;text-decoration:none;font-size:14px}
 .empty{color:#636366;text-align:center;padding:40px}
